@@ -1,0 +1,135 @@
+
+body{
+perspective: 600px;
+  } 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", serif;
+  color: #000;
+  font-style: italic;
+ 
+ }
+ /* start section header*/
+ .header
+ {
+  
+  text-align: center;
+  background-image:url('http://localhost:8000/storage/slider/foodlist.gif');
+  background-size: cover;
+}
+.header .overlay {
+    height: 70%;
+    background: rgba(35, 43, 54,0.5);
+}
+.header h1{
+
+    font-size: 40px;
+    font-style: normal;
+    color: aliceblue;
+    text-transform: uppercase;
+    padding-top:150px;
+    font-weight: bold;
+}
+}
+ 
+ /*End Section header*/
+/*start section Foods*/
+
+.imagestyles
+{
+	width:100%;
+    height: 348px;
+    margin-right: 5px;
+    display: inline-block;
+    transition: all 1s ease-in-out;
+}
+.list-Food a
+{
+	color: #f8fafc;
+    background-color:#1AD85E;
+}
+.list-Food .col-md-4
+{
+	
+	padding-bottom: 25px;
+    padding-top: 15px;
+} 
+
+/*End section Food*/
+/*star section Drinks*/
+.imagestyles
+{
+	width:100%;
+    height: 348px;
+    margin-right: 5px;
+    display: inline-block;
+    transition: all 1s ease-in-out;
+}
+.list-Drink a
+{
+	color: #f8fafc;
+    background-color:#1AD85E;
+}
+.list-Drink .col-md-4
+{
+	
+	padding-bottom: 25px;
+    padding-top: 15px;
+} 
+/* End Section Drinks*/
+
+/*star section footer*/
+.footer{
+height:15%;
+width:100%;
+background-color: #34c762;
+}
+.Copyright
+{
+	font-size: 31px;
+    color: aliceblue;
+    font-family: fantasy;
+    font-weight: bold;
+}
+.desingname
+{
+	font-size:20px;
+    color: aliceblue;
+    font-weight: bold;
+}
+/*End section Footer*/
+/*start section message*/
+.dialog-container{
+    position: absolute;
+    top:10%;
+    width:90%;
+    background-color:#fff;
+    padding: 10px;
+    border:2px solid #ddd;
+    box-shadow: 1px 1px 5px 1px #ccc;
+    border-radius:10px;
+    transition:all .3 ease-in-out;
+    opacity:1;
+    z-index: 10;
+    background-color:green;
+    color: white;
+
+}
+
+.dialog-body{
+    padding: 10px;
+    line-height: 30px;
+
+}
+.dele{
+    float:right;
+    cursor: pointer;
+}
+.product{
+    margin-top:20px;
+    margin-bottom:350px;
+    text-align: center;
+    color: red;
+
+}
+.product span{color: green}
+

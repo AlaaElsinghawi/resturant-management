@@ -1,0 +1,28 @@
+.imgthum{
+	display: inline-block;
+    width: 192px;
+    padding: -8px;
+    border-radius: 10%;
+
+}
+.textarea{
+	height:100%;}
+.img{border: 3px solid #11de9c;
+width: 223px;
+height: 150px;
+border-radius: 8%;
+    }
+ .title{
+ 	color:black;
+    font-size:14px;
+}
+li{
+list-style: none;}
+.discount{
+    max-height: 21px;
+    max-width: 40px;}
+.numbermeal
+{
+	 max-height: 21px;
+    max-width: 40px;
+}
