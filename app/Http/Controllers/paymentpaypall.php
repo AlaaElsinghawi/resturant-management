@@ -11,6 +11,7 @@ use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
+use PaymentExecution;
 use Cart;
 
 class paymentpaypall extends Controller
@@ -40,77 +41,88 @@ class paymentpaypall extends Controller
 
    public function payWithPaypal(Request $req)
     {
-      $total=$req->input('quantity');
-
-        $data=Cart::getContent();
-        $res=$data->toArray();
-
+     /*$this->validate(request(), [
+        'amount'    => ['required','numeric']
+        ]);*/
+        $input=$req->all();
+        echo $input['amount'];
+        //dd($input);
+        $pay_amount =50;
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
 
-
-foreach ($res as $value) {
-
-    
-
-     $quantity[]=$value['quantity'];
-      $item = new Item();
-        $item->setName($value['name'])
+        $item1 = new Item();
+        $item1->setName('Deposit Money')
             ->setCurrency('USD')
             ->setQuantity(1)
-            ->setPrice($value['price']);
-
+            ->setSku("123123")
+            ->setPrice($pay_amount);
      
 
-   }
+        $itemList = new ItemList();
+        $itemList->setItems(array($item1));
 
-       
-
-        $itemList = new ItemList() ;
-        $itemList->setItems( [ $item ] );
-
-
+         
         $amount = new Amount();
         $amount->setCurrency("USD")
-            ->setTotal( $total );
-
+            ->setTotal($pay_amount); 
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($itemList)
-            ->setDescription("amount");
+            ->setDescription("Deposit money in Shopaholic Wallet")
+            ->setInvoiceNumber(uniqid());
+
+        //$baseUrl = getBaseUrl();
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl('http://localhost:8000/ok')
-                      ->setCancelUrl('http://localhost:8000/cancel');
-     
-            $payment = new Payment();
-            $payment->setIntent("payment ok")
+        $redirectUrls->setReturnUrl(route('paypalOk'))
+        ->setCancelUrl(route('paypalCancel'));
+
+        $payment = new Payment();
+        $payment->setIntent("sale")
             ->setPayer($payer)
             ->setRedirectUrls($redirectUrls)
-            ->setTransactions([$transaction]);
-           
-        try 
-        {
-           $payment->create($this->apiContext);
-        } 
+            ->setTransactions(array($transaction));
+        
+        //$request = clone $payment;
 
-   catch(PayPalConnectionException $e){
-       echo $e->getCode(); // Prints the Error Code
-       echo $e->getData();
-       die($e);
-   }catch (Exception $ex) {
-       die($ex);
-     }
-      
+        try {
+            $payment->create($this->apiContext);
+        } catch (PayPalConnectionException $ex){
+            return back()->withError('Some error occur, sorry for inconvenient');
+        } catch (Exception $ex) {
+            return back()->withError('Some error occur, sorry for inconvenient');
+        }
+
+        
         $approvalUrl = $payment->getApprovalLink();
-
-        return redirect( $approvalUrl ) ;
-   
-       }
-
-       public function paypalOk()
+         if(!empty($approvalUrl)) {
+        
+            request()->session()->put('amount', $pay_amount);
+            return redirect($approvalUrl);
+        }else {         
+            return redirect()->route('wallet.index')->with( ['status' => 0,'paypal_res' => 1,'message' => 'Something went wrong...']);
+            
+        }
+    }
+       public function paypalOk(Request $request)
        {
-          echo "Ok";
+        if(empty($request->input('PayerID')) || empty($request->input('token')))
+        {
+            die('Payment Filed !');
+        }
+       
+            $paymentId=$request->get('paymentId');
+            $payment=Payment::get($paymentId,$this->apiContext);
+            $execution= new PaymentExecution();
+            $execution->setPayerId($request->input('PayerID'));
+            $result=$payment->execute($execution ,$this->apiContext);
+             if($result->getState() =='approved')
+             {
+                echo "Thank you. The Money Good";
+             }
+             echo "Failed";
+             dd($result);
        }
       
        public function paypalCancel()
